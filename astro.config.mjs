@@ -16,7 +16,8 @@ export default defineConfig({
       prefixDefaultLocale: true,
     },
   },
+  // Keystatic's admin UI renders with React, so both run only in dev.
   integrations: isDev
-    ? [(await import('@keystatic/astro')).default()]
+    ? [(await import('@astrojs/react')).default(), (await import('@keystatic/astro')).default()]
     : [],
 });

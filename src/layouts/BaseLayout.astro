@@ -2,6 +2,7 @@
 import '../styles/tokens.css';
 import { ui } from '../i18n/ui';
 import Wordmark from '../components/Wordmark.astro';
+import { brand, wordmarkFontHref } from '../data/brand';
 import type { Lang } from '../data/profile';
 
 interface Props {
@@ -21,7 +22,7 @@ const home = `/${lang}/`;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={`/${brand.favicon}`} />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
     <link rel="alternate" hreflang={lang} href={Astro.url.pathname} />
@@ -36,6 +37,7 @@ const home = `/${lang}/`;
       href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
+    {wordmarkFontHref && <link href={wordmarkFontHref} rel="stylesheet" />}
     <script is:inline>
       (function () {
         const stored = localStorage.getItem('theme');

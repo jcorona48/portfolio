@@ -1,4 +1,4 @@
-import { config, fields, collection } from '@keystatic/core';
+import { config, fields, collection, singleton } from '@keystatic/core';
 
 const caseStudyFields = {
   title: fields.slug({ name: { label: 'Title' } }),
@@ -12,6 +12,26 @@ const caseStudyFields = {
 
 export default config({
   storage: { kind: 'local' },
+  singletons: {
+    brand: singleton({
+      label: 'Brand',
+      path: 'src/data/brand',
+      format: { data: 'json' },
+      schema: {
+        wordmark: fields.text({ label: 'Wordmark', description: 'Text next to the logo in the header and footer.' }),
+        monogram: fields.text({ label: 'Monogram', description: 'Shown in the hero when there is no photo.' }),
+        wordmarkFont: fields.text({ label: 'Wordmark font', description: 'Any Google Fonts family, e.g. Space Grotesk.' }),
+        wordmarkWeight: fields.select({
+          label: 'Wordmark weight',
+          options: ['400', '500', '600', '700', '800', '900'].map((w) => ({ label: w, value: w })),
+          defaultValue: '800',
+        }),
+        logo: fields.text({ label: 'Logo', description: 'SVG file name in src/brand/. Empty for text only.' }),
+        photo: fields.text({ label: 'Photo', description: 'File name in public/. Empty to show the monogram.' }),
+        favicon: fields.text({ label: 'Favicon', description: 'SVG file name in public/.' }),
+      },
+    }),
+  },
   collections: {
     caseStudiesEs: collection({
       label: 'Case studies (ES)',

@@ -108,7 +108,7 @@ const roles = experience.filter((r) => !r.cvHidden);
 <style is:global>
   @page {
     size: Letter;
-    margin: 0.38in 0.5in;
+    margin: 0;
   }
   .cv-page {
     background: var(--color-bg);
@@ -246,8 +246,13 @@ const roles = experience.filter((r) => !r.cvHidden);
     .cv {
       max-width: none;
       margin: 0;
-      padding: 0;
+      padding: 0.6in 0.7in;
       box-shadow: none;
+      font-size: 9.3pt;
+      line-height: 1.28;
+    }
+    .cv section {
+      margin-top: 7pt;
     }
   }
 </style>

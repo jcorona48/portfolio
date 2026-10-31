@@ -44,12 +44,12 @@ export const person = {
     en: 'I help engineering teams ship to production faster.',
   },
   intro: {
-    es: 'Construyo los SDKs, el design system y los pipelines que usan los equipos de producto de Asociación Cibao. Antes, tiendas para comercios de EE. UU. y ERPs a la medida.',
-    en: "I build the SDKs, design system and pipelines that Asociación Cibao's product teams use. Before that, storefronts for US merchants and custom ERPs.",
+    es: 'Construyo los SDKs, design systems y pipelines sobre los que trabajan los equipos de producto. Antes, tiendas para comercios de EE. UU. y ERPs a la medida.',
+    en: 'I build the SDKs, design systems and pipelines product teams build on. Before that, storefronts for US merchants and custom ERPs.',
   },
   summary: {
-    es: 'Senior Software Engineer con más de 5 años construyendo sistemas en producción: ERPs, e-commerce y plataformas bancarias. Construyo las bases compartidas que usan los equipos de producto de Asociación Cibao: SDKs de integración, un design system en React, pipelines centralizados en Azure DevOps, infraestructura en Azure y microservicios.',
-    en: 'Senior Software Engineer with 5+ years building production systems, from ERPs and e-commerce to banking platforms. I build the shared foundations product teams at Asociación Cibao rely on: integration SDKs, a React design system, centralized Azure DevOps pipelines, Azure infrastructure and microservices.',
+    es: 'Senior Software Engineer con más de 5 años construyendo sistemas en producción: ERPs, e-commerce y plataformas bancarias. Construyo las bases compartidas que usan los equipos de producto: SDKs de integración, un design system en React, pipelines centralizados en Azure DevOps, infraestructura en Azure y microservicios.',
+    en: 'Senior Software Engineer with 5+ years building production systems, from ERPs and e-commerce to banking platforms. I build the shared foundations product teams rely on: integration SDKs, a React design system, centralized Azure DevOps pipelines, Azure infrastructure and microservices.',
   },
   location: {
     es: 'Santiago, República Dominicana',
