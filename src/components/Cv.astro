@@ -1,0 +1,253 @@
+---
+import { person, experience, education, skills, languages, formatRange, type Lang } from '../data/profile';
+import { cvPdf } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+const h = {
+  es: {
+    summary: 'Perfil',
+    experience: 'Experiencia',
+    skills: 'Habilidades técnicas',
+    education: 'Educación',
+    languages: 'Idiomas',
+    back: 'Volver al sitio',
+    download: 'Descargar PDF',
+    print: 'Imprimir',
+  },
+  en: {
+    summary: 'Summary',
+    experience: 'Experience',
+    skills: 'Technical Skills',
+    education: 'Education',
+    languages: 'Languages',
+    back: 'Back to site',
+    download: 'Download PDF',
+    print: 'Print',
+  },
+}[lang];
+
+const roles = experience.filter((r) => !r.cvHidden);
+---
+<div class="cv-toolbar" data-noprint>
+  <a href={`/${lang}/`}>{h.back}</a>
+  <a href={cvPdf(lang)} download class="cv-download">{h.download}</a>
+</div>
+
+<article class="cv">
+  <header class="cv-header">
+    <h1>{person.fullName}</h1>
+    <p class="cv-role">{person.headline[lang].replace(' · ', ', ')}</p>
+    <p class="cv-contact">
+      <span>{person.location[lang]}</span>
+      <span><a href={`mailto:${person.email}`}>{person.email}</a></span>
+      <span><a href={`https://www.${person.linkedin}/`}>{person.linkedin}</a></span>
+      <span><a href={`https://${person.website}/`}>{person.website}</a></span>
+    </p>
+  </header>
+
+  <section>
+    <h2>{h.summary}</h2>
+    <p>{person.summary[lang]}</p>
+  </section>
+
+  <section>
+    <h2>{h.experience}</h2>
+    {roles.map((r) => (
+      <div class="cv-role-entry">
+        <div class="cv-role-head">
+          <h3>
+            {r.title[lang]}{r.company !== 'Freelance' && <>, <span class="cv-company">{r.company}</span></>}
+          </h3>
+          <p class="cv-dates">{formatRange(r.start, r.end, lang)}</p>
+        </div>
+        <p class="cv-meta">{r.location[lang]}. {r.type[lang]}</p>
+        <ul>
+          {[...r.bullets[lang], ...(r.cvExtra?.[lang] ?? [])].map((b) => <li>{b}</li>)}
+        </ul>
+      </div>
+    ))}
+  </section>
+
+  <section>
+    <h2>{h.skills}</h2>
+    <ul class="cv-skills">
+      {skills.map((g) => (
+        <li>
+          <strong>{g.group[lang]}:</strong> {g.items.join(', ')}
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="cv-two">
+    <div>
+      <h2>{h.education}</h2>
+      {education.map((e) => (
+        <div class="cv-edu">
+          <div class="cv-role-head">
+            <h3>{e.degree[lang]}</h3>
+            <p class="cv-dates">{e.start} – {e.end}</p>
+          </div>
+          <p class="cv-meta">{e.school}</p>
+        </div>
+      ))}
+    </div>
+    <div>
+      <h2>{h.languages}</h2>
+      <ul class="cv-plain">
+        {languages[lang].map((l) => <li>{l}</li>)}
+      </ul>
+    </div>
+  </section>
+</article>
+
+<style is:global>
+  @page {
+    size: Letter;
+    margin: 0.38in 0.5in;
+  }
+  .cv-page {
+    background: var(--color-bg);
+  }
+  .cv-toolbar {
+    max-width: 8.5in;
+    margin: var(--space-6) auto var(--space-4);
+    padding-inline: var(--gutter);
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    font-weight: 700;
+  }
+  .cv {
+    --cv-ink: #14213d;
+    --cv-muted: #4e5d64;
+    --cv-rule: #1f4fd8;
+    max-width: 8.5in;
+    margin: 0 auto var(--space-16);
+    padding: 0.5in 0.55in;
+    background: #ffffff;
+    color: var(--cv-ink);
+    font-size: 9.6pt;
+    line-height: 1.33;
+    box-shadow: 0 1px 2px rgba(20, 33, 61, 0.08), 0 12px 32px -12px rgba(20, 33, 61, 0.18);
+  }
+  .cv a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .cv h1 {
+    font-size: 19pt;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .cv-role {
+    font-size: 11.5pt;
+    font-weight: 600;
+    margin-top: 2pt;
+  }
+  .cv-contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 10pt;
+    margin-top: 4pt;
+    color: var(--cv-muted);
+  }
+  .cv-contact span + span::before {
+    content: '|';
+    margin-right: 10pt;
+    color: #b8c4c1;
+  }
+  .cv section {
+    margin-top: 7.5pt;
+  }
+  .cv h2 {
+    font-size: 10.5pt;
+    font-weight: 800;
+    letter-spacing: 0;
+    padding-bottom: 2pt;
+    margin-bottom: 5pt;
+    border-bottom: 1.5pt solid var(--cv-rule);
+  }
+  .cv h3 {
+    font-size: 10.5pt;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.25;
+  }
+  .cv-company {
+    font-weight: 600;
+  }
+  .cv-role-entry + .cv-role-entry {
+    margin-top: 6pt;
+  }
+  .cv-role-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12pt;
+  }
+  .cv-dates {
+    flex-shrink: 0;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .cv-meta {
+    color: var(--cv-muted);
+    font-size: 9.5pt;
+  }
+  .cv ul {
+    margin: 3pt 0 0;
+    padding-left: 13pt;
+  }
+  .cv li + li {
+    margin-top: 1pt;
+  }
+  .cv .cv-skills,
+  .cv .cv-plain {
+    padding-left: 0;
+    list-style: none;
+  }
+  .cv-two {
+    display: grid;
+    grid-template-columns: 2.2fr 1fr;
+    gap: 18pt;
+  }
+  .cv-edu + .cv-edu {
+    margin-top: 4pt;
+  }
+  @media screen and (max-width: 8.5in) {
+    .cv {
+      padding: var(--space-6) var(--gutter);
+      box-shadow: none;
+    }
+    .cv-role-head {
+      flex-direction: column;
+      gap: 0;
+    }
+    .cv-two {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media print {
+    html,
+    body,
+    .cv-page {
+      background: #ffffff !important;
+    }
+    [data-noprint],
+    .skip-link {
+      display: none !important;
+    }
+    .cv {
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      box-shadow: none;
+    }
+  }
+</style>
