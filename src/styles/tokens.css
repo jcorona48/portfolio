@@ -1,0 +1,151 @@
+/* Design tokens — jcorona.dev v2 (modern tech, dark-first, cobalt blue) */
+:root {
+  --color-bg: #080d18;
+  --color-bg-raised: #0d1424;
+  --color-surface: #111a2d;
+  --color-text: #e8eef2;
+  --color-muted: #94a3b4;
+  --color-faint: #64748b;
+  --color-line: rgb(255 255 255 / 0.08);
+  --color-line-strong: rgb(255 255 255 / 0.16);
+  --color-accent: #5b8cff;
+  --color-accent-strong: #8fb0ff;
+  --color-accent-soft: rgb(91 140 255 / 0.14);
+  --color-logo-peak: #5b8cff;
+  --color-on-accent: #050b1a;
+  --color-glow: rgb(70 120 255 / 0.28);
+  --color-glow-2: rgb(120 90 255 / 0.16);
+  --color-selection: rgb(91 140 255 / 0.4);
+  --grid-line: rgb(255 255 255 / 0.045);
+
+  --font-sans: 'Schibsted Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  --step--2: 0.8125rem;
+  --step--1: 0.875rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.25rem;
+  --step-2: 1.5625rem;
+  --step-3: clamp(1.75rem, 1.4rem + 1.4vw, 2.44rem);
+  --step-4: clamp(2.1rem, 1.5rem + 2.4vw, 3.4rem);
+  --step-5: clamp(2.6rem, 1.5rem + 4.2vw, 5rem);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  --measure: 64ch;
+  --container: 1200px;
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 22px;
+  --shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 20px 40px -24px rgb(0 0 0 / 0.6);
+
+  color-scheme: dark;
+}
+
+[data-theme='light'] {
+  --color-bg: #f5f7fb;
+  --color-bg-raised: #ffffff;
+  --color-surface: #ffffff;
+  --color-text: #0f1a2b;
+  --color-muted: #4a5a68;
+  --color-faint: #6b7a88;
+  --color-line: rgb(15 26 43 / 0.09);
+  --color-line-strong: rgb(15 26 43 / 0.18);
+  --color-accent: #1f4fd8;
+  --color-accent-strong: #173da8;
+  --color-accent-soft: rgb(31 79 216 / 0.08);
+  --color-logo-peak: #3d6bff;
+  --color-on-accent: #ffffff;
+  --color-glow: rgb(31 79 216 / 0.16);
+  --color-glow-2: rgb(120 90 255 / 0.1);
+  --color-selection: rgb(31 79 216 / 0.2);
+  --grid-line: rgb(15 26 43 / 0.05);
+  --shadow: 0 1px 2px rgb(15 26 43 / 0.05), 0 16px 32px -20px rgb(15 26 43 / 0.25);
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-sans);
+  font-size: 100%;
+  line-height: 1.6;
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  scrollbar-color: var(--color-line-strong) var(--color-bg);
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-size: var(--step-0);
+}
+
+::selection {
+  background: var(--color-selection);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.22em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
