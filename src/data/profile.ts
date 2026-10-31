@@ -60,7 +60,7 @@ export const person = {
     en: 'Open to remote roles with international teams and freelance projects.',
   },
   email: 'joaneliasc86@gmail.com',
-  website: 'jcorona.dev',
+  website: 'jcorona.me',
   linkedin: 'linkedin.com/in/joancorona',
 };
 
