@@ -90,7 +90,7 @@ const roles = experience.filter((r) => !r.cvHidden);
         <div class="cv-edu">
           <div class="cv-role-head">
             <h3>{e.degree[lang]}</h3>
-            <p class="cv-dates">{e.start} – {e.end}</p>
+            <p class="cv-dates">{e.start} {lang === 'es' ? 'a' : 'to'} {e.end}</p>
           </div>
           <p class="cv-meta">{e.school}</p>
         </div>

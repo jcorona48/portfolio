@@ -179,7 +179,7 @@ export const experience: Role[] = [
   },
   {
     company: 'Emedia Store',
-    title: { es: 'Full Stack Developer — Team Lead', en: 'Full Stack Developer — Team Lead' },
+    title: { es: 'Full Stack Developer | Team Lead', en: 'Full Stack Developer | Team Lead' },
     type: { es: 'Jornada completa', en: 'Full-time' },
     location: { es: 'La Vega, RD', en: 'La Vega, DR' },
     start: '2021-01',
@@ -393,5 +393,5 @@ export function formatMonth(value: string | undefined, lang: Lang): string {
 }
 
 export function formatRange(start: string, end: string | undefined, lang: Lang): string {
-  return `${formatMonth(start, lang)} – ${formatMonth(end, lang)}`;
+  return `${formatMonth(start, lang)} ${lang === 'es' ? 'a' : 'to'} ${formatMonth(end, lang)}`;
 }
