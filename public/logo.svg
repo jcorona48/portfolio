@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Joan Corona">
+  <title>Joan Corona</title>
+  <path d="M8 46V20l12 12L32 10l12 22 12-12v26Z" fill="#14213D" stroke="#14213D" stroke-width="3" stroke-linejoin="round" />
+  <rect x="8" y="50" width="48" height="6" rx="2" fill="#14213D" />
+  <path d="M32 10 44 32 32 26 20 32Z" fill="#3D6BFF" />
+</svg>
