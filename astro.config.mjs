@@ -5,6 +5,10 @@ const isDev = process.env.NODE_ENV !== 'production';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://jcorona.me',
+  redirects: {
+    '/': '/es/',
+  },
   i18n: {
     defaultLocale: 'es',
     locales: ['es', 'en'],
