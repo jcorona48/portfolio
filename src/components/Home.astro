@@ -1,0 +1,755 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import { ui, cvPdf } from '../i18n/ui';
+import {
+  person,
+  experience,
+  caseStudies,
+  skills,
+  process as workProcess,
+  formatRange,
+  type Lang,
+} from '../data/profile';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+const mailto = `mailto:${person.email}`;
+
+const photoFile = ['photo.webp', 'photo.jpg', 'photo.jpeg', 'photo.png'].find((f) =>
+  fs.existsSync(path.join(process.cwd(), 'public', f)),
+);
+const companies = ['Asociación Cibao', 'Consultec-TI', 'Minnek Digital Studio', 'Your Store Wizards'];
+const [onboarding, integrations, ecommerce] = caseStudies;
+---
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <p class="status">
+        <span class="status-dot" aria-hidden="true"></span>
+        {t.available}
+      </p>
+      <h1 id="hero-title">{person.thesis[lang]}</h1>
+      <p class="hero-intro">{person.intro[lang]}</p>
+      <div class="actions">
+        <a class="btn btn-primary" href={mailto}>{t.ctaWrite}</a>
+        <a class="btn btn-ghost" href={cvPdf(lang)} download>{t.ctaCv}</a>
+      </div>
+    </div>
+    <figure class="portrait">
+      <div class="portrait-frame">
+        {photoFile ? (
+          <img src={`/${photoFile}`} alt={t.photoAlt} width="480" height="600" />
+        ) : (
+          <span class="monogram" aria-hidden="true">JC</span>
+        )}
+      </div>
+      <figcaption class="portrait-tag">
+        <strong>{person.name}</strong>
+        <span>{person.headline[lang]}</span>
+      </figcaption>
+    </figure>
+  </div>
+  <div class="container trust">
+    <p class="trust-label">{t.trusted}</p>
+    <ul role="list">
+      {companies.map((c) => <li>{c}</li>)}
+    </ul>
+  </div>
+</section>
+
+<section id="trabajo" class="container section" aria-labelledby="work-title">
+  <header class="section-head">
+    <h2 id="work-title">{t.workTitle}</h2>
+    <p>{t.workIntro}</p>
+  </header>
+
+  <div class="bento" data-spotlight>
+    {[onboarding, integrations, ecommerce].map((c, i) => (
+      <article class:list={['tile', 'case', `case-${i}`]} aria-labelledby={`case-${c.id}`}>
+        <h3 id={`case-${c.id}`}>{c.title[lang]}</h3>
+        <p class="case-problem">{c.problem[lang]}</p>
+        <ul role="list" class="case-decisions">
+          {c.decisions[lang].map((d) => <li>{d}</li>)}
+        </ul>
+        <p class="case-outcome">{c.outcome[lang]}</p>
+        <ul role="list" class="chips">
+          {c.stack.map((s) => <li>{s}</li>)}
+        </ul>
+      </article>
+    ))}
+    <div class="tile stat stat-a">
+      <p class="stat-num">~8</p>
+      <p class="stat-label">{t.statInitiatives}</p>
+    </div>
+    <div class="tile stat stat-b">
+      <p class="stat-num">30–40</p>
+      <p class="stat-label">{t.statStores}</p>
+    </div>
+    <div class="tile stat stat-c">
+      <p class="stat-num">5+</p>
+      <p class="stat-label">{t.statYears}</p>
+    </div>
+  </div>
+</section>
+
+<section id="trayectoria" class="container section" aria-labelledby="exp-title">
+  <header class="section-head">
+    <h2 id="exp-title">{t.experienceTitle}</h2>
+    <p>{t.experienceIntro}</p>
+  </header>
+  <ol class="roles" role="list">
+    {experience.map((r) => (
+      <li class:list={['role', { current: !r.end }]}>
+        <p class="role-date">{formatRange(r.start, r.end, lang)}</p>
+        <div class="role-main">
+          <h3>
+            {r.title[lang]}
+            {!r.end && <span class="badge">{t.now}</span>}
+          </h3>
+          <p class="role-company">{r.company}<span>{r.type[lang]}. {r.location[lang]}</span></p>
+          <p class="role-summary">{r.summary[lang]}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+  <p class="section-next">
+    <a href={`/${lang}/cv/`}>{t.cvView}</a>
+  </p>
+</section>
+
+<section class="container section" aria-labelledby="process-title">
+  <header class="section-head">
+    <h2 id="process-title">{t.processTitle}</h2>
+  </header>
+  <ol class="steps" role="list">
+    {workProcess.map((p, i) => (
+      <li>
+        <span class="step-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+        <h3>{p.title[lang]}</h3>
+        <p>{p.body[lang]}</p>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<section class="container section" aria-labelledby="stack-title">
+  <header class="section-head">
+    <h2 id="stack-title">{t.stackTitle}</h2>
+  </header>
+  <div class="stack">
+    {skills.map((g) => (
+      <div class="stack-group">
+        <h3>{g.group[lang]}</h3>
+        <ul role="list" class="chips">
+          {g.items.map((s) => <li>{s}</li>)}
+        </ul>
+      </div>
+    ))}
+  </div>
+</section>
+
+<section id="contacto" class="container section" aria-labelledby="contact-title">
+  <div class="contact">
+    <div class="contact-glow" aria-hidden="true"></div>
+    <h2 id="contact-title">{t.contactTitle}</h2>
+    <p class="contact-body">{t.contactBody}</p>
+    <a class="contact-mail" href={mailto}>{person.email}</a>
+    <div class="actions">
+      <a class="btn btn-primary" href={mailto}>{t.ctaWrite}</a>
+      <a class="btn btn-ghost" href={cvPdf(lang)} download>{t.ctaCv}</a>
+      <a class="btn btn-ghost" href={`https://www.${person.linkedin}/`} rel="me noopener">LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Cursor spotlight on bento tiles (pointer devices only).
+  const bento = document.querySelector<HTMLElement>('[data-spotlight]');
+  if (bento && window.matchMedia('(hover: hover)').matches) {
+    bento.addEventListener('pointermove', (e) => {
+      bento.querySelectorAll<HTMLElement>('.tile').forEach((tile) => {
+        const r = tile.getBoundingClientRect();
+        tile.style.setProperty('--mx', `${e.clientX - r.left}px`);
+        tile.style.setProperty('--my', `${e.clientY - r.top}px`);
+      });
+    });
+  }
+</script>
+
+<style>
+  /* Hero */
+  .hero {
+    position: relative;
+    padding-top: var(--space-16);
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 70% 65% at 60% 35%, #000 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 65% at 60% 35%, #000 30%, transparent 75%);
+    pointer-events: none;
+  }
+  .hero-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.85fr);
+    gap: var(--space-12);
+    align-items: center;
+  }
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-3) var(--space-1) var(--space-2);
+    font-size: var(--step--1);
+    font-weight: 500;
+    color: var(--color-muted);
+    border: 1px solid var(--color-line-strong);
+    border-radius: 999px;
+    background: var(--color-bg-raised);
+  }
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 0 0 var(--color-glow);
+    animation: ping 2.4s ease-out infinite;
+  }
+  @keyframes ping {
+    0% {
+      box-shadow: 0 0 0 0 var(--color-accent);
+    }
+    70%,
+    100% {
+      box-shadow: 0 0 0 8px transparent;
+    }
+  }
+  .hero h1 {
+    margin-top: var(--space-6);
+    font-size: var(--step-5);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.02;
+  }
+  .hero-intro {
+    margin-top: var(--space-6);
+    font-size: var(--step-1);
+    color: var(--color-muted);
+    max-width: 46ch;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-8);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0 var(--space-6);
+    font-weight: 600;
+    font-size: var(--step--1);
+    text-decoration: none;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    transition: background 160ms ease-out, border-color 160ms ease-out, transform 160ms ease-out, box-shadow 160ms ease-out;
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+  .btn-primary {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    box-shadow: 0 0 0 1px var(--color-accent), 0 8px 24px -8px var(--color-glow);
+  }
+  .btn-primary:hover {
+    background: var(--color-accent-strong);
+  }
+  .btn-ghost {
+    color: var(--color-text);
+    border-color: var(--color-line-strong);
+    background: var(--color-bg-raised);
+  }
+  .btn-ghost:hover {
+    border-color: var(--color-muted);
+  }
+
+  .portrait {
+    margin: 0;
+    position: relative;
+    justify-self: end;
+    width: min(100%, 400px);
+  }
+  .portrait::before {
+    content: '';
+    position: absolute;
+    inset: -18%;
+    background:
+      radial-gradient(closest-side at 40% 40%, var(--color-glow), transparent),
+      radial-gradient(closest-side at 70% 70%, var(--color-glow-2), transparent);
+    filter: blur(20px);
+    z-index: 0;
+  }
+  .portrait-frame {
+    position: relative;
+    z-index: 1;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--color-line-strong);
+    background:
+      linear-gradient(160deg, var(--color-surface), var(--color-bg-raised));
+    box-shadow: var(--shadow);
+  }
+  .portrait-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .monogram {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: clamp(5rem, 12vw, 9rem);
+    font-weight: 800;
+    letter-spacing: -0.06em;
+    color: var(--color-line-strong);
+  }
+  .portrait-tag {
+    position: absolute;
+    z-index: 2;
+    left: -12%;
+    bottom: 8%;
+    display: grid;
+    gap: 2px;
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--step--1);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius);
+    background: color-mix(in srgb, var(--color-bg-raised) 82%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+  }
+  .portrait-tag span {
+    color: var(--color-muted);
+  }
+
+  .trust {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4) var(--space-8);
+    margin-top: var(--space-16);
+    padding-block: var(--space-6);
+    border-top: 1px solid var(--color-line);
+  }
+  .trust-label {
+    font-size: var(--step--1);
+    color: var(--color-faint);
+  }
+  .trust ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-8);
+  }
+  .trust li {
+    font-weight: 700;
+    font-size: var(--step-1);
+    letter-spacing: -0.02em;
+    color: var(--color-muted);
+  }
+
+  /* Sections */
+  .section {
+    margin-top: var(--space-24);
+  }
+  .section-head {
+    display: grid;
+    gap: var(--space-3);
+    margin-bottom: var(--space-12);
+    max-width: 56ch;
+  }
+  .section-head h2 {
+    font-size: var(--step-4);
+    font-weight: 800;
+  }
+  .section-head p {
+    color: var(--color-muted);
+    font-size: var(--step-1);
+  }
+  .section-next {
+    margin-top: var(--space-8);
+    font-weight: 600;
+  }
+
+  /* Bento */
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-auto-flow: row dense;
+    gap: var(--space-4);
+  }
+  .tile {
+    --mx: -400px;
+    --my: -400px;
+    position: relative;
+    padding: var(--space-8);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-line);
+    background:
+      radial-gradient(420px circle at var(--mx) var(--my), var(--color-accent-soft), transparent 45%),
+      var(--color-bg-raised);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .tile::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: radial-gradient(300px circle at var(--mx) var(--my), var(--color-accent), transparent 60%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.7;
+    pointer-events: none;
+  }
+  .case-0 {
+    grid-column: span 7;
+    grid-row: span 2;
+  }
+  .stat-a {
+    grid-column: span 5;
+  }
+  .stat-b {
+    grid-column: span 5;
+  }
+  .case-1 {
+    grid-column: span 6;
+  }
+  .case-2 {
+    grid-column: span 6;
+  }
+  .stat-c {
+    grid-column: span 12;
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-6);
+  }
+  .case h3 {
+    font-size: var(--step-3);
+    font-weight: 800;
+  }
+  .case-0 h3 {
+    font-size: var(--step-4);
+    max-width: 12ch;
+  }
+  .case-problem {
+    margin-top: var(--space-4);
+    color: var(--color-muted);
+    max-width: 52ch;
+  }
+  .case-decisions {
+    list-style: none;
+    margin: var(--space-6) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2);
+  }
+  .case-decisions li {
+    position: relative;
+    padding-left: var(--space-6);
+    max-width: 56ch;
+  }
+  .case-decisions li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 10px;
+    height: 2px;
+    background: var(--color-accent);
+  }
+  .case-outcome {
+    margin-top: var(--space-6);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-line);
+    font-weight: 600;
+  }
+  .chips {
+    list-style: none;
+    margin: var(--space-6) 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .chips li {
+    padding: 2px var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--color-muted);
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    background: var(--color-bg);
+  }
+  .stat {
+    display: grid;
+    align-content: end;
+    gap: var(--space-2);
+    min-height: 170px;
+  }
+  .stat-num {
+    font-size: clamp(3rem, 2rem + 4vw, 5rem);
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    color: var(--color-accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-label {
+    color: var(--color-muted);
+    max-width: 30ch;
+  }
+  .stat-c {
+    min-height: 0;
+  }
+  .stat-c .stat-num {
+    font-size: var(--step-4);
+  }
+
+  /* Roles */
+  .roles {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-raised);
+    overflow: hidden;
+  }
+  .role {
+    display: grid;
+    grid-template-columns: 13rem minmax(0, 1fr);
+    gap: var(--space-6);
+    padding: var(--space-6) var(--space-8);
+    border-top: 1px solid var(--color-line);
+  }
+  .role:first-child {
+    border-top: 0;
+  }
+  .role.current {
+    background: linear-gradient(90deg, var(--color-accent-soft), transparent 60%);
+  }
+  .role-date {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--color-faint);
+    padding-top: 0.2em;
+  }
+  .role h3 {
+    font-size: var(--step-1);
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-3);
+  }
+  .badge {
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: 0;
+    padding: 1px var(--space-2);
+    border-radius: 999px;
+    color: var(--color-accent);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 45%, transparent);
+  }
+  .role-company {
+    margin-top: 2px;
+    font-weight: 600;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-3);
+  }
+  .role-company span {
+    font-weight: 400;
+    color: var(--color-faint);
+  }
+  .role-summary {
+    margin-top: var(--space-2);
+    color: var(--color-muted);
+    max-width: var(--measure);
+  }
+
+  /* Steps */
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+  .steps li {
+    padding: var(--space-6);
+    border-top: 1px solid var(--color-line-strong);
+  }
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--color-accent);
+  }
+  .steps h3 {
+    margin-top: var(--space-3);
+    font-size: var(--step-2);
+    font-weight: 700;
+  }
+  .steps p {
+    margin-top: var(--space-2);
+    color: var(--color-muted);
+  }
+
+  /* Stack */
+  .stack {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+  .stack-group {
+    padding: var(--space-6);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius);
+  }
+  .stack-group h3 {
+    font-size: var(--step-0);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .stack-group .chips {
+    margin-top: var(--space-4);
+  }
+
+  /* Contact */
+  .contact {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(2rem, 6vw, 5rem);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-line-strong);
+    background: var(--color-bg-raised);
+    text-align: center;
+    display: grid;
+    justify-items: center;
+    gap: var(--space-4);
+  }
+  .contact-glow {
+    position: absolute;
+    left: 50%;
+    top: -60%;
+    width: 80%;
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+    background: radial-gradient(closest-side, var(--color-glow), transparent);
+    pointer-events: none;
+  }
+  .contact h2 {
+    position: relative;
+    font-size: var(--step-5);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+  }
+  .contact-body {
+    position: relative;
+    color: var(--color-muted);
+    font-size: var(--step-1);
+    max-width: 44ch;
+  }
+  .contact-mail {
+    position: relative;
+    font-size: var(--step-2);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+  .contact .actions {
+    position: relative;
+    justify-content: center;
+    margin-top: var(--space-4);
+  }
+
+  @media (max-width: 960px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+    }
+    .portrait {
+      justify-self: start;
+      width: min(100%, 320px);
+    }
+    .portrait-tag {
+      left: auto;
+      right: -8%;
+    }
+    .case-0,
+    .case-1,
+    .case-2 {
+      grid-column: span 12;
+      grid-row: auto;
+    }
+    .stat-a,
+    .stat-b {
+      grid-column: span 6;
+    }
+    .steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 640px) {
+    .hero {
+      padding-top: var(--space-12);
+    }
+    .tile {
+      padding: var(--space-6);
+    }
+    .stat-a,
+    .stat-b {
+      grid-column: span 12;
+    }
+    .stat-c {
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .role {
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+      padding: var(--space-6);
+    }
+    .steps,
+    .stack {
+      grid-template-columns: 1fr;
+    }
+    .portrait-tag {
+      right: 0;
+    }
+  }
+</style>
