@@ -1,22 +1,19 @@
 ---
+import { brand, logoSvg } from '../data/brand';
+
 interface Props {
   size?: 'md' | 'sm';
 }
 const { size = 'md' } = Astro.props;
 ---
-<span class:list={['wordmark', size]} aria-label="Joan Corona" role="img">
-  <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
-    <path
-      d="M8 46V20l12 12L32 10l12 22 12-12v26Z"
-      fill="currentColor"
-      stroke="currentColor"
-      stroke-width="3"
-      stroke-linejoin="round"
-    />
-    <rect x="8" y="50" width="48" height="6" rx="2" fill="currentColor" />
-    <path class="peak" d="M32 10 44 32 32 26 20 32Z" />
-  </svg>
-  <span aria-hidden="true">jcorona</span>
+<span
+  class:list={['wordmark', size]}
+  aria-label="Joan Corona"
+  role="img"
+  style={`--wordmark-font: '${brand.wordmarkFont}'; --wordmark-weight: ${brand.wordmarkWeight};`}
+>
+  {logoSvg && <span class="mark" aria-hidden="true" set:html={logoSvg} />}
+  <span aria-hidden="true">{brand.wordmark}</span>
 </span>
 
 <style>
@@ -24,7 +21,8 @@ const { size = 'md' } = Astro.props;
     display: inline-flex;
     align-items: center;
     gap: 0.4em;
-    font-weight: 800;
+    font-family: var(--wordmark-font), var(--font-sans);
+    font-weight: var(--wordmark-weight);
     letter-spacing: -0.04em;
     line-height: 1;
     color: var(--color-text);
@@ -36,11 +34,16 @@ const { size = 'md' } = Astro.props;
     font-size: 1.15rem;
   }
   .mark {
+    display: inline-flex;
     width: 1.3em;
     height: 1.3em;
     flex-shrink: 0;
   }
-  .peak {
+  .mark :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+  .mark :global(.peak) {
     fill: var(--color-logo-peak);
   }
 </style>

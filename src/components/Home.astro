@@ -1,7 +1,6 @@
 ---
-import fs from 'node:fs';
-import path from 'node:path';
 import { ui, cvPdf } from '../i18n/ui';
+import { brand, photoSrc } from '../data/brand';
 import {
   person,
   experience,
@@ -19,9 +18,6 @@ const { lang } = Astro.props;
 const t = ui[lang];
 const mailto = `mailto:${person.email}`;
 
-const photoFile = ['photo.webp', 'photo.jpg', 'photo.jpeg', 'photo.png'].find((f) =>
-  fs.existsSync(path.join(process.cwd(), 'public', f)),
-);
 const companies = ['Asociación Cibao', 'Consultec-TI', 'Minnek Digital Studio', 'Your Store Wizards'];
 const [onboarding, integrations, ecommerce] = caseStudies;
 ---
@@ -42,10 +38,10 @@ const [onboarding, integrations, ecommerce] = caseStudies;
     </div>
     <figure class="portrait">
       <div class="portrait-frame">
-        {photoFile ? (
-          <img src={`/${photoFile}`} alt={t.photoAlt} width="480" height="600" />
+        {photoSrc ? (
+          <img src={photoSrc} alt={t.photoAlt} width="480" height="600" />
         ) : (
-          <span class="monogram" aria-hidden="true">JC</span>
+          <span class="monogram" aria-hidden="true">{brand.monogram}</span>
         )}
       </div>
       <figcaption class="portrait-tag">
